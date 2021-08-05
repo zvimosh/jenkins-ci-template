@@ -1,0 +1,29 @@
+node('windows-2019') {
+    
+    stage('checkout Code ') {
+     checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/lidorg-dev/jenkins-ci-template.git']]])
+
+}
+stage('Build') {
+    bat '''cd src\\MyWindowsService
+nuget restore -source "https://api.nuget.org/v3/index.json;https://www.myget.org/F/nuget"'''
+}
+stage('Build & Test Code Deploy ') {
+   bat '"C:\\Program Files (x86)\\MSBuild\\14.0\\Bin\\msbuild" src\\MyWindowsService\\MyWIndowsService\\Deploy-Windows-Service-Via-MSBuild.proj'
+    
+   powershell 'Get-Service -name \'MyWindowsService\' | where Status -eq "Running"'
+}
+stage('Package') {
+    powershell '''cd src\\MyWindowsService\\MyWindowsService\\bin\\Debug
+Compress-Archive * package.zip'''
+}
+stage('Notify Slack') {
+    slackSend channel: 'devops_december2020', message: 'Build Success '
+}
+stage('Activate  Chuck Norris') {
+    chuckNorris()
+    cleanWs()
+}
+}
+
+
