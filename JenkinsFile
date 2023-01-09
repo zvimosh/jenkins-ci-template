@@ -1,4 +1,4 @@
-node('windows-2019') {
+node('Windows2022') {
     
     stage('checkout Code ') {
      checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/lidorg-dev/jenkins-ci-template.git']]])
