@@ -18,5 +18,11 @@ pipeline {
       }
     }
 
+    stage('build') {
+      steps {
+        bat 'nuget restore .\\src\\MyWindowsService\\ -source "https://api.nuget.org/v3/index.json"'
+      }
+    }
+
   }
 }
